@@ -12,8 +12,8 @@
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
 
-    <title>후루룩짭짭 맛좋은 라면</title>
-
+    <title>후루룩 짭짭 맛좋은 라면</title>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
 
     <style>
@@ -82,23 +82,82 @@
             border: 2px solid lightgrey;
             border-radius: 3px;
         }
-        .card-wrap {
-            width : 900px;
-            margin-top: 30px;
-            margin-right: auto;
-            margin-left: auto;
+        .mycards{
+            margin: 20px auto 0px auto;
+            width: 95%;
+            max-width: 1200px;
         }
+
     </style>
     <script>
         $(document).ready(function () {
+            bsCustomFileInput.init()
             listing();
         });
 
         function listing() {
+            $.ajax({
+
+                type: "GET",
+                url: "/recommend",
+                data: {},
+                success: function (response) {
+                    let recommends = response['recommends']
+                     console.log(recommends)
+                    for (let i = 0; i < recommends.length; i++) {
+                        let title = recommends[i]['title']
+                        let kind = recommends[i]['kind']
+                        let pepper = recommends[i]['pepper']
+                        let comment = recommends[i]['comment']
+                        let file = recommends[i]['file']
+                        let peppers ='🌶'.repeat(pepper)
+                        // console.log(title,content)
+
+                        let temp_html = `<div class="card">
+                                            <img src="../static/${file}" class="card-img-top">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${title}</h5>
+                                                <p href="#" class="card-text">${kind}</p>
+                                                <p class="card-text">${peppers}</p>
+                                                <p class="mycomment">${comment}</p>
+                                            </div>
+                                        </div>`
+                        $('#cards-box').append(temp_html)
+                    }
+                }
+            })
 
         }
 
         function posting() {
+            let title = $("#title").val()
+            let kind = $("#kind").val()
+            let pepper = $("#pepper").val()
+
+            let comment = $("#desc").val()
+
+            let file = $('#file')[0].files[0]
+            let form_data = new FormData()
+
+            form_data.append("file_give", file)
+            form_data.append("title_give", title)
+            form_data.append("comment_give", comment)
+            form_data.append("spicy_give", pepper)
+            form_data.append("kind_give", kind)
+
+            $.ajax({
+                type: "POST",
+                url: "/recommend",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            });
+
 
         }
 
@@ -122,12 +181,12 @@
             <label>라면 이름</label>
         </div>
         <div class="form-floating mb-3">
-            <input id="meterial" type="text" class="form-control" placeholder="name@example.com">
+            <input id="kind" type="text" class="form-control" placeholder="name@example.com">
             <label>사용한 라면</label>
         </div>
         <div class="input-group mb-3">
-            <label class="input-group-text" for="star">맵기</label>
-            <select class="form-select" id="star">
+            <label class="input-group-text" for="pepper">맵기</label>
+            <select class="form-select" id="pepper">
                 <option selected>-- 선택하기 --</option>
                 <option value="1">🌶</option>
                 <option value="2">🌶🌶</option>
@@ -152,36 +211,39 @@
         </div>
     </div>
 
-    <div class="card-wrap">
-        <div class="card-columns">
-            <div class="card">
-                <a href="#"><img src="../static/dog.jpeg" class="card-img-top"></a>
-                <div class="card-body">
-                    <a href="#"><h5 class="card-title">라면 이름</h5></a>
-                    <p href="#" class="card-text">사용한 라면</p>
-                    <p class="card-text">🌶🌶🌶</p>
-                </div>
-            </div>
-            <div class="card">
-                <a href="#"><img src="../static/dog.jpeg" class="card-img-top"></a>
-                <div class="card-body">
-                    <a href="#"><h5 class="card-title">라면 이름</h5></a>
-                    <p href="#" class="card-text">사용한 라면</p>
-                    <p class="card-text">🌶🌶🌶</p>
-                </div>
-            </div>
-            <div class="card">
-                <a href="#"><img src="../static/dog.jpeg" class="card-img-top"></a>
-                <div class="card-body">
-                    <a href="#"><h5 class="card-title">라면 이름</h5></a>
-                    <p href="#" class="card-text">사용한 라면</p>
-                    <p class="card-text">🌶🌶🌶</p>
-                </div>
-            </div>
-        </div>
+<!--?    <div class="card-wrap">-->
+<!--?        <div class="card-columns">-->
+<!--?            <div class="card">-->
+<!--?                <a href="#"><img src="../static/dog.jpeg" class="card-img-top"></a>-->
+<!--?                <div class="card-body">-->
+<!--?                    <a href="#"><h5 class="card-title">라면 이름</h5></a>-->
+<!--?                    <p href="#" class="card-text">사용한 라면</p>-->
+<!--?                    <p class="card-text">🌶🌶🌶</p>-->
+<!--?                </div>-->
+<!--?            </div>-->
+<!--?            <div class="card">-->
+<!--?                <a href="#"><img src="../static/dog.jpeg" class="card-img-top"></a>-->
+<!--?                <div class="card-body">-->
+<!--?                    <a href="#"><h5 class="card-title">라면 이름</h5></a>-->
+<!--?                    <p href="#" class="card-text">사용한 라면</p>-->
+<!--?                    <p class="card-text">🌶🌶🌶</p>-->
+<!--?                </div>-->
+<!--?            </div>-->
+<!--?            <div class="card">-->
+<!--?                <a href="#"><img src="../static/dog.jpeg" class="card-img-top"></a>-->
+<!--?                <div class="card-body">-->
+<!--?                    <a href="#"><h5 class="card-title">라면 이름</h5></a>-->
+<!--?                    <p href="#" class="card-text">사용한 라면</p>-->
+<!--?                    <p class="card-text">🌶🌶🌶</p>-->
+<!--?                </div>-->
+<!--?            </div>-->
+<!--?        </div>-->
+<!--?    </div>-->
+
+<div class="mycards">
+    <div class="row row-cols-1 row-cols-md-4 g-4" id="cards-box">
     </div>
-
-
+</div>
 
 </body>
 
