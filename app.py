@@ -125,5 +125,13 @@ def recommend_post():
 def login_page():
     return render_template('index.html')
 
+# 검색기능
+@app.route("/search", methods=["GET"])
+def search_get():
+    #search_receive = request.form['search_give']
+    #search_recommend_list = list(db.recommend.find({'kind':f'{search_receive}'}, {'_id': False}))
+    search_recommend_list = list(db.recommend.find({'kind':'너구리'}, {'_id': False}))
+    return jsonify({'search_recommends': search_recommend_list})
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
