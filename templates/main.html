@@ -245,17 +245,14 @@
 
         function find_kind() {
             $('#cards-box').hide()
-            let search = $('#search-input').val()
-            console.log(search)
-            if (search_words_list.includes(search)) {
+            let keyword = $('#search-input').val()
+            console.log(keyword)
+            if (search_words_list.includes(keyword)) {
                 //리스트에 있으면
                 $.ajax({
                     type: 'GET',
                     url: '/search',
-                    //왜 get으로 보내도 받질 못할까.. input값 정상으로 받아서 kind에 포함되나 안되나 확인도 가능, 디비에서 찾아서 받아오는 것도 작동/ 데이터가 파이썬으로 보내지는가?
-                    //파이썬 get에서 받은 값 find({'kind':f'{search_receive}'} 이게 문제인가? ,
-                    //data: {search_give:search},
-                    data: {},
+                    data: {search_give:keyword},
                     success: function (response) {
                         let search_recommends = response['search_recommends']
                         for (let i = 0; i < search_recommends.length; i++) {
@@ -276,10 +273,10 @@
                                             </div>
                                         </div>`
                             $('#search-cards-box').append(temp_html)
+                            //왜 새로고침이 되지.. reload 넣은적이 없는데...
                         }
                     }
                 });
-                //$('#cards-box')["card-text"].includes(search).show()
             } else {
                 //없으면 main으로
                 window.location.href = `/`
