@@ -16,7 +16,6 @@ ca = certifi.where()
 client = MongoClient('mongodb+srv://test:sparta@cluster0.l2ux3.mongodb.net/Cluster0?retryWrites=true&w=majority', tlsCAFile=ca)
 db = client.dbramyun
 
-
 @app.route('/')
 def home():
     token_receive = request.cookies.get('mytoken')
@@ -27,16 +26,21 @@ def home():
         recommends = list(db.recommend.find({}, {'_id': False}))
         return render_template("main.html", recommends=recommends)
 
-    except jwt.ExpiredSignatureError:
-        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
-    except jwt.exceptions.DecodeError:
-        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+    except jwt.ExpiredSignatureError: #msg="로그인 시간이 만료되었습니다.
+        return redirect(url_for("main_page", msg=token_receive))
+    except jwt.exceptions.DecodeError:#msg="로그인 정보가 존재하지 않습니다.
+        return redirect(url_for("main_page", msg=token_receive))
+
 
 
 @app.route('/index')
-def login():
-    msg = request.args.get("msg")
-    return render_template('index.html', msg=msg)
+def main_page():
+    token_receive = request.args.get("msg")
+    print(token_receive)
+    recommends = list(db.recommend.find({}, {'_id': False}))
+    return render_template("main.html", recommends=recommends, token=token_receive)
+
+
 
 @app.route('/sign_in', methods=['POST'])
 def sign_in():

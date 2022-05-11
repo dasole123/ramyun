@@ -189,8 +189,13 @@
 
         }
 
-        function open_box() {
-            $('#post-box').show()
+         function open_box() {
+            {%  if token!=None %}  //token 로그인상태여부체크
+               $('#post-box').toggle() //누르면 창이 뜨고 다시 누르면 닫치게 토글로 기존 show에서 변경 TJ
+            {% else %}
+                alert("로그인을 하세요!")
+                                       location.href = "/login_page"
+            {% endif %}
         }
 
         function close_box() {
