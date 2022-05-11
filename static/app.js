@@ -123,7 +123,7 @@ function go_signup() {
      } else {
          $("#help-password-login").text("")
      }
-     alert(username);
+     alert(`${username} 님 안녕하세요!`);
      $.ajax({
          type: "POST",
          url: "/sign_in",
