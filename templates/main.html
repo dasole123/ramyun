@@ -218,11 +218,26 @@
         function page() {
             location.href = "/login_page"
         }
+        <!--로그아웃 / 로그인 기능-->
+        var cookie = $.cookie('mytoken');
 
         $(document).ready(function () {
-            $('#logout').click(function () {
-                alert('로그아웃!')
+            let temp_html = `<button onclick="page()" class="float-right">로그인</button>`
+            let temp_logout_html = `
+                                <button id="logout" class="float-right">로그아웃</button>
+                                <button id="profile" class="float-right">프로필</button>
+            `
+            if (cookie != null) {
+                alert('로그인이 완료 되었습니다! 나만의 라면을 등록해주세요!')
+                $('#login-toggle').append(temp_logout_html)
 
+            } else {
+                $('#login-toggle').append(temp_html);
+            }
+
+            $('#logout').click(function () {
+
+                alert('로그아웃이 완료 되었습니다!')
                 $.removeCookie('mytoken', {path: '/'})
                 window.location.href = "/"
             });
@@ -292,8 +307,7 @@
 <body>
     <div class="mytitle">
         <div id="login-toggle" class="toggle-login">
-            <button id="logout" class="float-right">로그아웃</button>
-            <button class="float-right">프로필</button>
+
         </div>
         <button onclick="open_box()">추천하기</button>
     </div>
@@ -401,8 +415,4 @@
     </div>
 
 </body>
-
-<footer class="footer">
-    <button class="button is-warning is-light" onclick="page()">로그인</button>
-</footer>
 </html>
