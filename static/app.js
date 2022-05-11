@@ -123,7 +123,6 @@ function go_signup() {
      } else {
          $("#help-password-login").text("")
      }
-     alert(`${username} 님 안녕하세요!`);
      $.ajax({
          type: "POST",
          url: "/sign_in",
@@ -133,6 +132,8 @@ function go_signup() {
          },
          success: function (response) {
              if (response['result'] == 'success') {
+                alert(`${username} 님 안녕하세요!`);
+
                  $.cookie('mytoken', response['token'], {path: '/'});
                  window.location.replace("/")
              } else {
