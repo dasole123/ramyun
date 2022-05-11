@@ -23,7 +23,10 @@ def home():
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
 
-        return render_template('main.html')
+        # DB에서 저장된 데이터 찾아서 HTML에 나타내기 TJ
+        recommends = list(db.recommend.find({}, {'_id': False}))
+        return render_template("main.html", recommends=recommends)
+
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -90,12 +93,12 @@ def recommend_post():
     comment_receive = request.form['comment_give']
 
     file = request.files["file_give"]
-    extension = file.filename.split('.')[-1]  # 항상 jpg 가 아닐수 있자나 [-1] 마지막걸 가져옴 . 기준으로 나누고
+    extension = file.filename.split('.')[-1]  # 항상 jpg 가 아닐수 있자나 [-1] 마지막걸 가져옴 . 기준으로 나누고 TJ
     today = datetime.now()
     mytime = today.strftime('%Y-%m-%d-%H-%M-%S')
 
     filename = f'file-{mytime}'
-    # save_to =f'static/{filename}.jpg'  를 아래로 변경 확장자 달라도 가능하게 저장
+    # save_to =f'static/{filename}.jpg'  를 아래로 변경 확장자 달라도 가능하게 저장 TJ
     save_to = f'static/{filename}.{extension}'
 
     file.save(save_to)
@@ -111,11 +114,11 @@ def recommend_post():
 
     return jsonify({'msg': 'save 완료!'})
 
-@app.route("/recommend", methods=["GET"])
-def recommend_get():
-    recommend_list = list(db.recommend.find({}, {'_id': False}))
-
-    return jsonify({'recommends': recommend_list})
+# @app.route("/recommend", methods=["GET"])
+# def recommend_get():
+#     recommend_list = list(db.recommend.find({}, {'_id': False}))
+#
+#     return jsonify({'recommends': recommend_list})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
