@@ -110,6 +110,26 @@
             max-width: 1200px;
         }
 
+        {#검색창 css시작#}
+        .search-bar-box {
+            display: flex;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .search-bar {
+            width: 500px;
+        }
+
+        .search-bar-btn {
+            margin-left: 20px;
+        }
+
+        {#검색창 css끝#}
+
     </style>
     <script>
         let pepper_for_pic = $("#pepper").val()
@@ -179,6 +199,66 @@
                 window.location.href = "/"
             });
         });
+
+        //검색했을때 kind만 거를 수 있도록 서버사이드렌더링
+        let search_words = {{ recommends|tojson }};
+        let search_words_list = [];
+        for (let i = 0; i < search_words.length; i++) {
+            search_words_list.push(search_words[i]["kind"])
+        }
+        console.log(search_words_list)
+
+        //검색기능 ajax이용하여 db에서 검색된 카드들 가져오기
+        function search_list() {
+            let search = $('#search-input').val()
+            console.log(search)
+
+        }
+
+        function find_kind() {
+            $('#cards-box').hide()
+            let search = $('#search-input').val()
+            console.log(search)
+            if (search_words_list.includes(search)) {
+                //리스트에 있으면
+                $.ajax({
+                    type: 'GET',
+                    url: '/search',
+                    //왜 get으로 보내도 받질 못할까.. input값 정상으로 받아서 kind에 포함되나 안되나 확인도 가능, 디비에서 찾아서 받아오는 것도 작동/ 데이터가 파이썬으로 보내지는가?
+                    //파이썬 get에서 받은 값 find({'kind':f'{search_receive}'} 이게 문제인가? ,
+                    //data: {search_give:search},
+                    data: {},
+                    success: function (response) {
+                        let search_recommends = response['search_recommends']
+                        for (let i = 0; i < search_recommends.length; i++) {
+                            let title = search_recommends[i]['title']
+                            let kind = search_recommends[i]['kind']
+                            let pepper = search_recommends[i]['pepper']
+                            let comment = search_recommends[i]['comment']
+                            let file = search_recommends[i]['file']
+                            let peppers = '🌶'.repeat(pepper)
+
+                            let temp_html = `<div class="card">
+                                            <img src="../static/${file}" class="card-img-top">
+                                            <div class="card-body">
+                                                <h5 class="card-title">${title}</h5>
+                                                <p href="#" class="card-text">${kind}</p>
+                                                <p class="card-text">${peppers}</p>
+                                                <p class="mycomment">${comment}</p>
+                                            </div>
+                                        </div>`
+                            $('#search-cards-box').append(temp_html)
+                        }
+                    }
+                });
+                //$('#cards-box')["card-text"].includes(search).show()
+            } else {
+                //없으면 main으로
+                window.location.href = `/`
+                alert("아직 등록되지 않은 라면이에요ㅠㅠ")
+
+            }
+        }
 
 
     </script>
@@ -259,7 +339,17 @@
 <!--?        </div>-->
 <!--?    </div>-->
 
-<div class="mycards">
+    <!--? 검색창 -->
+    <form>
+        <div class="form-group search-bar-box">
+            <input type="text" class="form-control search-bar" id="search-input"
+                   placeholder="원하시는 라면 종류는 입력해주세요!">
+            <button class="input-group-append btn btn-warning search-bar-btn" onclick="find_kind()" id="search">검색
+            </button>
+        </div>
+    </form>
+
+    <div class="mycards">
     <div class="row row-cols-1 row-cols-md-4 g-4" id="cards-box">
         {% for recommend in recommends %}
             <div class="card">
@@ -274,7 +364,13 @@
             </div>
         {% endfor %}
     </div>
-</div>
+    </div>
+
+    <!--? 검색된 카드들 -->
+    <div class="mycards">
+        <div class="row row-cols-1 row-cols-md-4 g-4" id="search-cards-box">
+        </div>
+    </div>
 
 </body>
 
