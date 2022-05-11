@@ -5,15 +5,15 @@ import hashlib
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
-
+import certifi
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 
 SECRET_KEY = 'SPARTA'
-
-client = MongoClient('mongodb+srv://test:sparta@cluster0.l2ux3.mongodb.net/Cluster0?retryWrites=true&w=majority')
+ca = certifi.where()
+client = MongoClient('mongodb+srv://test:sparta@cluster0.l2ux3.mongodb.net/Cluster0?retryWrites=true&w=majority', tlsCAFile=ca)
 db = client.dbramyun
 
 
@@ -91,6 +91,7 @@ def recommend_post():
     spicy_receive = request.form['spicy_give']
 
     comment_receive = request.form['comment_give']
+    like_receive = request.form['num_give']
 
     file = request.files["file_give"]
     extension = file.filename.split('.')[-1]  # 항상 jpg 가 아닐수 있자나 [-1] 마지막걸 가져옴 . 기준으로 나누고 TJ
@@ -108,11 +109,27 @@ def recommend_post():
         'kind': kind_receive,
         'pepper': spicy_receive,
         'comment': comment_receive,
-        'file': f'{filename}.{extension}'
+        'file': f'{filename}.{extension}',
+        'like': like_receive
     }
     db.recommend.insert_one(doc)
 
     return jsonify({'msg': 'save 완료!'})
+
+# 좋아요 기능
+
+@app.route('/like', methods=['POST'])
+def like():
+    num_receive = request.form["num_give"]
+    title_receive = request.form["title_give"]
+
+    target_post = db.recommend.find_one({'title': title_receive})
+    current_like = int(target_post['like'])
+    plus_like = str(current_like+num_receive)
+
+    db.recommend.update_one({'like': plus_like})
+
+    return jsonify({'msg': '좋아요 +1'})
 
 # @app.route("/recommend", methods=["GET"])
 # def recommend_get():
