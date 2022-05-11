@@ -150,8 +150,8 @@ def login_page():
 @app.route("/search", methods=["GET"])
 def search_get():
     #search_receive = request.form['search_give']
-    #search_recommend_list = list(db.recommend.find({'kind':f'{search_receive}'}, {'_id': False}))
-    search_recommend_list = list(db.recommend.find({'kind':'너구리'}, {'_id': False}))
+    search = request.args.get('search_give')
+    search_recommend_list = list(db.recommend.find({'kind':search}, {'_id': False}))
     return jsonify({'search_recommends': search_recommend_list})
 
 if __name__ == '__main__':
