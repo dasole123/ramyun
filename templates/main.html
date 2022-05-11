@@ -18,7 +18,6 @@
     <title>후루룩 짭짭 맛좋은 라면</title>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 
     <style>
         * {
@@ -110,14 +109,6 @@
             width: 95%;
             max-width: 1200px;
         }
-        .buttons {
-            margin-top: 30px;
-        }
-
-        .footer {
-            background-color: lightyellow;
-            margin-top: 30px;
-        }
 
         {#검색창 css시작#}
         .search-bar-box {
@@ -161,7 +152,6 @@
             let comment = $("#desc").val()
 
             let file = $('#file')[0].files[0]
-            let like_like = $("#post_like").val() //좋아요
             let form_data = new FormData()
 
 
@@ -171,7 +161,6 @@
             form_data.append("comment_give", comment)
             form_data.append("spicy_give", pepper)
             form_data.append("kind_give", kind)
-            form_data.append("like_give", like_like) //좋아요
 
             $.ajax({
                 type: "POST",
@@ -197,18 +186,6 @@
             $('#post-box').hide()
         }
 
-        //좋아요
-        function like(num) {
-            $.ajax({
-                type: 'POST',
-                url: '/api/like', //이게 틀린것같아요
-                data: {num_give : num,
-                        title_give : $("#title").val()},
-                success: function (response) {
-                    alert(response['msg']); window.location.reload()
-                }
-            });
-        }
         <!--클릭시 로그인 페이지 이동-->
         function page() {
             location.href = "/login_page"
@@ -295,6 +272,7 @@
         </div>
         <button onclick="open_box()">추천하기</button>
     </div>
+    <button onclick="page()">로그인</button>
 
     <div class="mypost" id="post-box">
         <div class="form-floating mb-3">
@@ -382,10 +360,6 @@
                     <p class="card-text">{{ '🌶'*(recommend.pepper|int) }}</p>
                     <p class="mycomment">{{ recommend.comment }}</p>
                     <img class="spicy-size" src="../static/spicy/lv{{recommend.pepper + ".png"}}">
-                    <div class="buttons">
-                    <button class="button is-primary is-light"  onclick="window.location.href='/index.html'">코멘트</button>
-                    <button id="post_like" onclick="like(1)" class="button is-danger is-focused">좋아요!</button>
-                    </div>
                 </div>
             </div>
         {% endfor %}
@@ -400,7 +374,4 @@
 
 </body>
 
-<footer class="footer">
-    <button class="button is-warning is-light" onclick="page()">로그인</button>
-</footer>
 </html>
