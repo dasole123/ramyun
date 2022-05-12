@@ -126,19 +126,26 @@ def recommend_post():
     return jsonify({'msg': 'save 완료!'})
 
 # 좋아요 기능
-
-@app.route('/like', methods=['POST'])
+@app.route("/up", methods=["POST"])
 def like():
-    num_receive = request.form["num_give"]
-    title_receive = request.form["title_give"]
+    num_receive = request.form['num_give']
+    num_receive2 = request.form['num_give2']
+    num_receive2 =int(num_receive2)+1
+    db.recommend.update_one({'id': int(num_receive)}, {'$set': {'like': (num_receive2)}})
+    return jsonify({'msg': '버킷 완료!'})
 
-    target_post = db.recommend.find_one({'title': title_receive})
-    current_like = int(target_post['like'])
-    plus_like = str(current_like+num_receive)
-
-    db.recommend.update_one({'like': plus_like})
-
-    return jsonify({'msg': '좋아요 +1'})
+# @app.route('/like', methods=['POST'])
+# def like():
+#     num_receive = request.form["num_give"]
+#     title_receive = request.form["title_give"]
+#
+#     target_post = db.recommend.find_one({'title': title_receive})
+#     current_like = int(target_post['like'])
+#     plus_like = str(current_like+num_receive)
+#
+#     db.recommend.update_one({'like': plus_like})
+#
+#     return jsonify({'msg': '좋아요 +1'})
 
 # @app.route("/recommend", methods=["GET"])
 # def recommend_get():

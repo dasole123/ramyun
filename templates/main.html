@@ -204,17 +204,20 @@
 
 
         //좋아요
-        function like(num) {
+//--------------------------------------------------변수좀 정리할 필요있음
+        function like(num,like) {
+                alert("into")
             $.ajax({
                 type: 'POST',
-                url: '/api/like', //이게 틀린것같아요
-                data: {num_give : num,
-                        title_give : $("#title").val()},
+                url: '/up', //이게 틀린것같아요
+                data: {num_give : num, num_give2:like},
                 success: function (response) {
-                    alert(response['msg']); window.location.reload()
+                   // alert(response['msg'])
+                    window.location.reload()
                 }
             });
         }
+//-----------------------------------------------------------------------------
         <!--클릭시 로그인 페이지 이동-->
         function page() {
             location.href = "/login_page"
@@ -364,12 +367,12 @@
                 <div class="card-body">
                     <h5 class="card-title">{{ recommend.title }}</h5>
                     <p href="#" class="card-text">{{ recommend.kind }}</p>
-                    <p class="card-text">{{ '🌶'*(recommend.pepper|int) }}</p>
+{#                    <p class="card-text">{{ '🌶'*(recommend.pepper|int) }}</p>#}
                     <p class="mycomment">{{ recommend.comment }}</p>
                     <img class="spicy-size" src="../static/spicy/lv{{recommend.pepper + ".png"}}">
                     <div class="buttons">
                     <button class="button is-primary is-light"  onclick="window.location.href='/index.html'">코멘트</button>
-                    <button id="post_like" onclick="like(1)" class="button is-danger is-focused">좋아요!</button>
+                    <button id="post_like" onclick="like({{recommend.id|int}},{{ recommend.like }})" class="button is-danger is-focused">{{ recommend.like }}</button>
                     </div>
                 </div>
             </div>
