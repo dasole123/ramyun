@@ -15,6 +15,11 @@
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
+    <!--og태그 작성 -->
+    <meta property="og:title" content="후루룩 짭짭 맛좋은 라면"/>
+    <meta property="og:description" content="각자의 특별한 라면 레시피를 공유하고 좋아요를 받아보세요!!"/>
+    <meta property="og:image" content="../static/banner.jpg"/>
+
     <title>후루룩 짭짭 맛좋은 라면</title>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
@@ -119,22 +124,12 @@
             margin-left: 20px;
         }
         {# 게시글 버튼  #}
-        .comment-btn {
-            color: coral;
-            border-color: coral;
-        }
-        .comment-btn:hover {
-            color: chocolate;
-        }
         .buttons {
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
             margin-top: 30px;
-        }
-        .like-btn {
-            margin-left: 50px;
         }
         {#  footer  #}
         .footer {
@@ -206,7 +201,6 @@
         //좋아요
 //--------------------------------------------------변수좀 정리할 필요있음
         function like(num,like) {
-                alert("into")
             $.ajax({
                 type: 'POST',
                 url: '/up', //이게 틀린것같아요
@@ -229,10 +223,8 @@
             let temp_html = `<button onclick="page()" class="float-right">로그인</button>`
             let temp_logout_html = `
                                 <button id="logout" class="float-right">로그아웃</button>
-                                <button id="profile" class="float-right">프로필</button>
             `
             if (cookie != null) {
-                alert('로그인이 완료 되었습니다! 나만의 라면을 등록해주세요!')
                 $('#login-toggle').append(temp_logout_html)
 
             } else {
@@ -371,8 +363,7 @@
                     <p class="mycomment">{{ recommend.comment }}</p>
                     <img class="spicy-size" src="../static/spicy/lv{{recommend.pepper + ".png"}}">
                     <div class="buttons">
-                    <button type="button" class="btn btn-outline-warning comment-btn"  onclick="window.location.href='/index.html'">코멘트</button>
-                    <button type= "button" id="post_like" onclick="like({{recommend.id|int}},{{ recommend.like }})" class="btn btn-outline-danger like-btn">{{ recommend.like }} 좋아요</button>
+                    <button type= "button" id="post_like" onclick="like({{recommend.id|int}},{{ recommend.like }})" class="btn btn-outline-danger">{{ recommend.like }} 좋아요</button>
                     </div>
                 </div>
             </div>

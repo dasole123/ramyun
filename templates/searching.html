@@ -110,23 +110,12 @@
             width: 95%;
             max-width: 1200px;
         }
-        {# 게시글 버튼  #}
-        .comment-btn {
-            color: coral;
-            border-color: coral;
-        }
-        .comment-btn:hover {
-            color: chocolate;
-        }
         .buttons {
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
             margin-top: 30px;
-        }
-        .like-btn {
-            margin-left: 50px;
         }
         {#  footer  #}
         .footer {
@@ -221,7 +210,6 @@
             let temp_html = `<button onclick="page()" class="float-right">로그인</button>`
             let temp_logout_html = `
                                 <button id="logout" class="float-right">로그아웃</button>
-                                <button id="profile" class="float-right">프로필</button>
             `
             if (cookie != null) {
                 
@@ -350,11 +338,8 @@
                     <p class="mycomment">{{ recommend.comment }}</p>
                     <img class="spicy-size" src="../static/spicy/lv{{ recommend.pepper + ".png" }}">
                     <div class="buttons">
-                        <button type="button" class="btn btn-outline-warning comment-btn"
-                                onclick="window.location.href='/index.html'">코멘트
-                        </button>
                         <button type="button" id="post_like" onclick="like({{ recommend.id|int }},{{ recommend.like }})"
-                                class="btn btn-outline-danger like-btn">{{ recommend.like }} 좋아요
+                                class="btn btn-outline-danger">{{ recommend.like }} 좋아요
                         </button>
                     </div>
                 </div>
