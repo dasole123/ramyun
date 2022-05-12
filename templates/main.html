@@ -18,7 +18,6 @@
     <title>후루룩 짭짭 맛좋은 라면</title>
     <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 
     <style>
         * {
@@ -138,7 +137,14 @@
         }
 
         {#검색창 css끝#}
-
+        .btn-comment {
+            background-color: mediumaquamarine;
+            color: white;
+        }
+        .btn-like {
+            background-color: coral;
+            color: white;
+        }
     </style>
     <script>
         let pepper_for_pic = $("#pepper").val()
@@ -190,17 +196,12 @@
         }
 
          function open_box() {
-            {%  if token!=None %}  //token 로그인상태여부체크
-               $('#post-box').toggle() //누르면 창이 뜨고 다시 누르면 닫치게 토글로 기존 show에서 변경 TJ
-            {% else %}
+            {%  if token==None %}
                 alert("로그인을 하세요!")
                                        location.href = "/login_page"
             {% endif %}
         }
 
-        function close_box() {
-            $('#post-box').hide()
-        }
 
         //좋아요
         function like(num) {
@@ -306,47 +307,69 @@
 
 <body>
     <div class="mytitle">
+        <!--로그인 / 로그아웃 / 프로필 영역-->
         <div id="login-toggle" class="toggle-login">
-
         </div>
-        <button onclick="open_box()">추천하기</button>
+         <!--모달버튼-->
+        <button id="openModalBtn" onclick="open_box()">추천하기</button>
     </div>
+<!-- 모달 영역 -->
+<div id="modalBox" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+        <h4 class="modal-title" id="myModalLabel">라면 등록하기</h4>
+      </div>
+        <div class="modal-body">
+            <div class="form-floating mb-3">
+                <input id="kind" type="text" class="form-control" placeholder="name@example.com">
+                <label>사용한 라면</label>
+            </div>
+            <div class="form-floating mb-3">
+                <input id="title" type="text" class="form-control" placeholder="name@example.com">
+                <label>라면 이름</label>
+            </div>
+            <div class="input-group mb-3">
+                <label class="input-group-text" for="pepper">맵기</label>
+                <select class="form-select" id="pepper">
+                    <option selected>-- 선택하기 --</option>
+                    <option value="1">🌶</option>
+                    <option value="2">🌶🌶</option>
+                    <option value="3">🌶🌶🌶</option>
+                    <option value="4">🌶🌶🌶🌶</option>
+                    <option value="5">🌶🌶🌶🌶🌶</option>
+                </select>
+            </div>
+            <div class="form-floating">
+                <textarea id="desc" class="form-control" placeholder="Leave a comment here"></textarea>
+                <label for="desc">조리법 및 설명</label>
+            </div>
 
-    <div class="mypost" id="post-box">
-        <div class="form-floating mb-3">
-            <input id="title" type="text" class="form-control" placeholder="name@example.com">
-            <label>라면 이름</label>
-        </div>
-        <div class="form-floating mb-3">
-            <input id="kind" type="text" class="form-control" placeholder="name@example.com">
-            <label>사용한 라면</label>
-        </div>
-        <div class="input-group mb-3">
-            <label class="input-group-text" for="pepper">맵기</label>
-            <select class="form-select" id="pepper">
-                <option selected>-- 선택하기 --</option>
-                <option value="1">🌶</option>
-                <option value="2">🌶🌶</option>
-                <option value="3">🌶🌶🌶</option>
-                <option value="4">🌶🌶🌶🌶</option>
-                <option value="5">🌶🌶🌶🌶🌶</option>
-            </select>
-        </div>
-        <div class="form-floating">
-            <textarea id="desc" class="form-control" placeholder="Leave a comment here"></textarea>
-            <label for="desc">조리법 및 설명</label>
-        </div>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="file">
+                <label class="custom-file-label" for="file">이미지 업로드하기</label>
+            </div>
 
-        <div class="custom-file">
-            <input type="file" class="custom-file-input" id="file">
-            <label class="custom-file-label" for="file">이미지 업로드하기</label>
-        </div>
-
-        <div class="mybtns">
-            <button onclick="posting()" type="button" class="btn btn-warning">기록하기</button>
-            <button onclick="close_box()" type="button" class="btn btn-outline-warning">닫기</button>
+            <div class="mybtns modal-footer">
+                <button onclick="posting()" type="button" class="btn btn-warning">기록하기</button>
+                <button onclick="close_box()" type="button" class="btn btn-outline-warning" id="closeModalBtn">닫기</button>
+            </div>
         </div>
     </div>
+  </div>
+</div>
+    <!--모달 스크립트 위치 수정 금지-->
+<script>
+  // 모달 버튼에 이벤트를 건다.
+  $('#openModalBtn').on('click', function(){
+    $('#modalBox').modal('show');
+  });
+  // 모달 안의 취소 버튼에 이벤트를 건다.
+  $('#closeModalBtn').on('click', function(){
+    $('#modalBox').modal('hide');
+  });
+</script>
 
 <!--?    <div class="card-wrap">-->
 <!--?        <div class="card-columns">-->
@@ -399,8 +422,8 @@
                     <p class="mycomment">{{ recommend.comment }}</p>
                     <img class="spicy-size" src="../static/spicy/lv{{recommend.pepper + ".png"}}">
                     <div class="buttons">
-                    <button class="button is-primary is-light"  onclick="window.location.href='/index.html'">코멘트</button>
-                    <button id="post_like" onclick="like(1)" class="button is-danger is-focused">좋아요!</button>
+                    <button class="btn btn-comment"  onclick="window.location.href='/index.html'">코멘트</button>
+                    <button id="post_like" onclick="like(1)" class="btn btn-like">좋아요!</button>
                     </div>
                 </div>
             </div>
