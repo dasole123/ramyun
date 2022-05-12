@@ -228,7 +228,7 @@
                                 <button id="profile" class="float-right">프로필</button>
             `
             if (cookie != null) {
-                alert('로그인이 완료 되었습니다! 나만의 라면을 등록해주세요!')
+                
                 $('#login-toggle').append(temp_logout_html)
 
             } else {
@@ -242,6 +242,10 @@
                 window.location.href = "/"
             });
         });
+
+        function backpage() {
+            window.location.href = `/`
+        }
 
 
 /*
@@ -296,7 +300,7 @@
         <div id="login-toggle" class="toggle-login">
 
         </div>
-        <button onclick="open_box()">추천하기</button>
+        <button onclick="backpage()">메인으로</button>
     </div>
 
     <div class="mypost" id="post-box">
