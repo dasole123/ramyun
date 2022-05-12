@@ -36,8 +36,9 @@ def home():
 @app.route('/index')
 def main_page():
     token_receive = request.args.get("msg")
-    print(token_receive)
+    # print(token_receive)
     recommends = list(db.recommend.find({}, {'_id': False}))
+
     return render_template("main.html", recommends=recommends, token=token_receive)
 
 
@@ -90,10 +91,13 @@ def check_dup():
 
 @app.route("/recommend", methods=["POST"])
 def recommend_post():
+
+    target_post = list(db.recommend.find({}, {'_id': False}))    #각포스팅을 구별짓기 현재있는 포스팅 카운팅해서
+    count = len(target_post) + 1
+
     title_receive = request.form['title_give']
     kind_receive = request.form['kind_give']
     spicy_receive = request.form['spicy_give']
-
     comment_receive = request.form['comment_give']
     like_receive = request.form['num_give']
 
@@ -109,6 +113,7 @@ def recommend_post():
     file.save(save_to)
 
     doc = {
+        'id': count,
         'title': title_receive,
         'kind': kind_receive,
         'pepper': spicy_receive,
@@ -146,13 +151,12 @@ def like():
 def login_page():
     return render_template('index.html')
 
-# 검색기능
-@app.route("/search", methods=["GET"])
-def search_get():
-    #search_receive = request.form['search_give']
-    search = request.args.get('search_give')
-    search_recommend_list = list(db.recommend.find({'kind':search}, {'_id': False}))
-    return jsonify({'search_recommends': search_recommend_list})
+# 검색기능  keyword 로 랜더링하는 페이지에 검색할 값으 넘겨줘서 해당 페이지에서 키를 활용해서 문자열비교
+@app.route("/search/<keyword>")
+def search(keyword):
+
+    recommends = list(db.recommend.find({}, {'_id': False}))
+    return render_template('searching.html',recommends=recommends,key = keyword)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
