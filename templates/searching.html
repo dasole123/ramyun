@@ -110,35 +110,31 @@
             width: 95%;
             max-width: 1200px;
         }
+        {# 게시글 버튼  #}
+        .comment-btn {
+            color: coral;
+            border-color: coral;
+        }
+        .comment-btn:hover {
+            color: chocolate;
+        }
         .buttons {
-            margin-top: 30px;
-        }
-
-        .footer {
-            background-color: lightyellow;
-            margin-top: 30px;
-        }
-
-        {#검색창 css시작#}
-        .search-bar-box {
-            display: flex;
             display: flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
-            margin-top: 20px;
+            margin-top: 30px;
         }
-
-        .search-bar {
-            width: 500px;
+        .like-btn {
+            margin-left: 50px;
         }
-
-        .search-bar-btn {
-            margin-left: 20px;
+        {#  footer  #}
+        .footer {
+            width: 100%;
+            height: 200px;
+            background-color: lightyellow;
+            margin-top: 30px;
         }
-
-        {#검색창 css끝#}
-
     </style>
     <script>
         let pepper_for_pic = $("#pepper").val()
@@ -352,10 +348,14 @@
                     <p href="#" class="card-text">{{ recommend.kind }}</p>
 {#                    <p class="card-text">{{ '🌶'*(recommend.pepper|int) }}</p>#}
                     <p class="mycomment">{{ recommend.comment }}</p>
-                    <img class="spicy-size" src="../static/spicy/lv{{recommend.pepper + ".png"}}">
+                    <img class="spicy-size" src="../static/spicy/lv{{ recommend.pepper + ".png" }}">
                     <div class="buttons">
-                    <button class="button is-primary is-light"  onclick="window.location.href='/index.html'">코멘트</button>
-                    <button id="post_like" onclick="like(1)" class="button is-danger is-focused">좋아요!</button>
+                        <button type="button" class="btn btn-outline-warning comment-btn"
+                                onclick="window.location.href='/index.html'">코멘트
+                        </button>
+                        <button type="button" id="post_like" onclick="like({{ recommend.id|int }},{{ recommend.like }})"
+                                class="btn btn-outline-danger like-btn">{{ recommend.like }} 좋아요
+                        </button>
                     </div>
                 </div>
             </div>
@@ -363,11 +363,9 @@
         {% endfor %}
     </div>
     </div>
-    <!--? 검색된 카드들 -->
-    <div class="mycards">
-        <div class="row row-cols-1 row-cols-md-4 g-4" id="search-cards-box">
-        </div>
-    </div>
+
+    <footer class="footer">
+    </footer>
 
 </body>
 </html>
